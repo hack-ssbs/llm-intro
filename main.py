@@ -5,17 +5,20 @@ import os
 import base64
 import pyscreenshot as ImageGrab
 from datetime import datetime
+from io import BytesIO
 
 dotenv.load_dotenv()
 
-url = "https://jamsapi.hackclub.dev/openai/chat/completions"
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_BASE = os.getenv("OPENAI_API_BASE") or "https://api.openai.com/v1"
 
-def encode_image(image_path):
-  with open(image_path, "rb") as image_file:
-    return base64.b64encode(image_file.read()).decode('utf-8')
+def encode_im(im):
+    virtual_file = BytesIO()
+    im.save(virtual_file, 'PNG')
+    return base64.b64encode(virtual_file.getvalue()).decode('utf-8')
 
-def ask(img_path, prompt):
-   base64_image = encode_image(img_path)
+def ask(im, prompt):
+   base64_image = encode_im(im)
    payload = json.dumps({
       "model": "gpt-4-vision-preview",
       "stream": False,
@@ -44,16 +47,17 @@ def ask(img_path, prompt):
       'Content-Type': 'application/json'
    }
 
-   response = requests.request("POST", url, headers=headers, data=payload)
+   response = requests.request("POST", f"{OPENAI_API_BASE}chat/completions", headers=headers, data=payload)
    res = response.json()
-   return res["choices"][0]["message"]['content']
+   cat = res["choices"][0]["message"]['content']
+   print(f"category: {cat}")
+   return cat
 
 while True:
     im = ImageGrab.grab()
-    im.save('.screenshot.png')
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print('screenshot taken')
-    res = ask(".screenshot.png", "categorize this screenshot. My categories are:"
+    res = ask(im, "categorize this screenshot. My categories are:"
                                 "'coding', 'entertainment', 'academics'."
                                 "Output the category only. Do not output anything else.")
     with open('log.txt', 'a') as f:

@@ -22,3 +22,4 @@ Here are some ideas on how to get started
 - Run the VLLM labeling process in a separate thread
 - Introduce more categories, perhaps even dynamic categories
 - Add analytics mechanisms for our log / improve our logging mechanism
+- Add Graphical User Interface
