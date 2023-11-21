@@ -8,7 +8,13 @@ and dump it into a log.
 
 ## How to run this
 
-Run in your shell/terminal/command line:
+First, create a `.env` file in this folder with the following contents:
+```
+OPENAI_API_KEY=<your openai api key>
+OPENAI_API_BASE=<your openai api base> // OPTIONAL
+```
+
+Then, run this in your shell/terminal/command line:
 ```shell
 pip install -r requirements.txt
 python main.py
