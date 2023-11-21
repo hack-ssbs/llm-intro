@@ -6,8 +6,6 @@ import base64
 import pyscreenshot as ImageGrab
 from datetime import datetime
 
-im = ImageGrab.grab()
-
 dotenv.load_dotenv()
 
 url = "https://jamsapi.hackclub.dev/openai/chat/completions"
